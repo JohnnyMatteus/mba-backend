@@ -92,7 +92,7 @@ class AuthBO
                 return $data;
             }
 
-            $passwordReset = PasswordReset::firstOrCreate(
+            $passwordReset = PasswordReset::updateOrCreate(
                 ['email' => $user->email],
                 [
                     'email' => $user->email,
@@ -114,7 +114,7 @@ class AuthBO
     {
         $data = new \stdClass();
         $passwordReset = PasswordReset::where('token', $request->token)->first();
-
+            
         if (!$passwordReset) {
             $data->message = 'Este token de redefinição de senha é inválido.';
             $data->codigo =  false;
@@ -156,7 +156,7 @@ class AuthBO
             return $data;
         }
 
-        $user->password = Hash::make($request->confirmpassword);
+        $user->password = bcrypt($request->password);
         $user->save();
 
         PasswordReset::where('email', $passwordReset->email)->delete();
