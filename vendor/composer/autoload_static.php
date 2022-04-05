@@ -734,14 +734,16 @@ class ComposerStaticInit1b6b83f2373f59d5302f0c03aac8a246
     );
 
     public static $classMap = array (
+        'App\\BO\\Acl\\PermissionsBO' => __DIR__ . '/../..' . '/app/BO/Acl/PermissionsBO.php',
+        'App\\BO\\Acl\\RolesBO' => __DIR__ . '/../..' . '/app/BO/Acl/RolesBO.php',
         'App\\BO\\AuthBO' => __DIR__ . '/../..' . '/app/BO/AuthBO.php',
         'App\\BO\\SocialAuthBO' => __DIR__ . '/../..' . '/app/BO/SocialAuthBO.php',
         'App\\BO\\UsuarioBO' => __DIR__ . '/../..' . '/app/BO/UsuarioBO.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\Api\\Acl\\PermissionsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/Acl/PermissionsController.php',
+        'App\\Http\\Controllers\\Api\\Acl\\RolesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/Acl/RolesController.php',
         'App\\Http\\Controllers\\Api\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/AuthController.php',
-        'App\\Http\\Controllers\\Api\\PermissionsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/PermissionsController.php',
-        'App\\Http\\Controllers\\Api\\RolesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/RolesController.php',
         'App\\Http\\Controllers\\Api\\SocialAuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/SocialAuthController.php',
         'App\\Http\\Controllers\\Api\\UsuarioController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/UsuarioController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',

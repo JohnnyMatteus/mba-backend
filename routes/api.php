@@ -33,6 +33,8 @@ Route::middleware('auth:api')->prefix('v1')->name('v1.')->group(function () {
 
     });
     Route::resource('usuario', 'Api\UsuarioController');
+    Route::resource('menu', 'Api\MenuController');
+
 
 
     Route::group(['prefix' => 'acl'], function () {

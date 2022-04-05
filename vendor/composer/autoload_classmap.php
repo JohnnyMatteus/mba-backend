@@ -6,14 +6,16 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\BO\\Acl\\PermissionsBO' => $baseDir . '/app/BO/Acl/PermissionsBO.php',
+    'App\\BO\\Acl\\RolesBO' => $baseDir . '/app/BO/Acl/RolesBO.php',
     'App\\BO\\AuthBO' => $baseDir . '/app/BO/AuthBO.php',
     'App\\BO\\SocialAuthBO' => $baseDir . '/app/BO/SocialAuthBO.php',
     'App\\BO\\UsuarioBO' => $baseDir . '/app/BO/UsuarioBO.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Http\\Controllers\\Api\\Acl\\PermissionsController' => $baseDir . '/app/Http/Controllers/Api/Acl/PermissionsController.php',
+    'App\\Http\\Controllers\\Api\\Acl\\RolesController' => $baseDir . '/app/Http/Controllers/Api/Acl/RolesController.php',
     'App\\Http\\Controllers\\Api\\AuthController' => $baseDir . '/app/Http/Controllers/Api/AuthController.php',
-    'App\\Http\\Controllers\\Api\\PermissionsController' => $baseDir . '/app/Http/Controllers/Api/PermissionsController.php',
-    'App\\Http\\Controllers\\Api\\RolesController' => $baseDir . '/app/Http/Controllers/Api/RolesController.php',
     'App\\Http\\Controllers\\Api\\SocialAuthController' => $baseDir . '/app/Http/Controllers/Api/SocialAuthController.php',
     'App\\Http\\Controllers\\Api\\UsuarioController' => $baseDir . '/app/Http/Controllers/Api/UsuarioController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
