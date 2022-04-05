@@ -64,6 +64,16 @@ class UsuarioBO
                 "subject" => 'all'
             ]);
         }
+        else if ($this->dadosUsuario['user']['role'] == 'Construtora')
+        {
+            return array([
+                "action" => 'read',
+                "subject" => 'dashboad-empresa'
+            ], [
+                "action" => 'read',
+                "subject" => 'Public'
+            ]);
+        }
         else {
             return $this->normalizarListaPermissoes();
         }
@@ -79,7 +89,7 @@ class UsuarioBO
                 $item = explode($permissao, '.');
                 array_push($data,  [
                     "action" => $item[1],
-                    "subject" => $item[0]
+                    "subject" => ucfirst($item[0]) 
                 ]);
             }            
         }

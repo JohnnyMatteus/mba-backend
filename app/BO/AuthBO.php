@@ -51,12 +51,14 @@ class AuthBO
             'password' => 'required'
         ]);
 
-        if (!Auth::attempt($loginData)) {
-            return response()->json(['message' => 'Invalid Credentials'], 401);
+        if (!Auth::attempt($loginData))
+        {
+            $objeto->message = 'Invalid Credentials';
+            $objeto->status = false;
+        } else {
+            $objeto->access_token = auth()->user()->createToken('authToken')->accessToken;
+            $objeto->status = true;
         }
-
-        $objeto->access_token = auth()->user()->createToken('authToken')->accessToken;
-
         return $objeto;
     }
 

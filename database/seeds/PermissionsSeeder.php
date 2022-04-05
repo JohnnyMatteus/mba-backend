@@ -147,5 +147,12 @@ class PermissionsSeeder extends Seeder
             "name" => "painel.sindico",
             "guard_name" => "api"
         ]);
+
+        Permission::firstOrCreate([
+            "name" => "public.read"
+        ],[
+            "name" => "public.read",
+            "guard_name" => "api"
+        ]);
     }
 }
