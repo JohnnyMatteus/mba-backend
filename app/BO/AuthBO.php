@@ -5,6 +5,7 @@ namespace App\BO;
 use Carbon\Carbon;
 use App\Model\User;
 use App\Http\Requests;
+use App\Model\ModelHasRole;
 use Illuminate\Support\Str;
 use App\Model\PasswordReset;
 use Illuminate\Http\Request;
@@ -24,23 +25,38 @@ class AuthBO
 
     public function cadastrarUsuario($request)
     {
-        $objeto = new \stdClass();
-        // Verificação de dados basico para cadastro
-        $validatedData = $request->validate([
-            'name' => 'required|max:55',
-            'email' => 'email|required|unique:users',
-            'password' => 'required|confirmed'
-        ]);
-        // Criptografando senha
-        $validatedData['password'] = bcrypt($request->password);
-        // Criando novo usuário
-        $objeto->user = User::create($validatedData);
-        // Adicionando permissão de visitante
-        $objeto->user->roles()->attach(2);
-        // Criando array de dados de acesso
-        $accessToken = $objeto->user->createToken('authToken')->accessToken;
+        try {
+            $objeto = new \stdClass();
+            // Verificação de dados basico para cadastro
+            $validatedData = $request->validate([
+                'name' => 'required|max:55',
+                'email' => 'email|required|unique:users',
+                'password' => 'required|confirmed'
+            ]);
+            // Criptografando senha
+            $validatedData['password'] = bcrypt($request->password);
+            $validatedData['status' ] = 'A'; 
+            $validatedData['id_empresa' ] = 1;
+            $validatedData['email_verified_at' ] = now();
+            $validatedData['remember_token' ] = Str::random(10);
+    
+            
+            // Criando novo usuário
+            $objeto->user = User::create($validatedData);
 
-        return $accessToken;
+            // Adicionando permissão de visitante
+            ModelHasRole::create([
+                "model_id" =>  $objeto->user->id,
+                "role_id" => 2,
+                "model_type" => 'App\Model\User'                
+            ]);
+                
+            return true;
+        } catch (\Throwable $th)
+        {
+            return false;
+        }
+
     }
 
     public function logar($request)
