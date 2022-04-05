@@ -15,12 +15,12 @@ class RolesBO
     public function initialize()
     {
         $objeto = new \stdClass();
-
         $objeto->roles = (new Role())->all();    
-
-        $objeto->roles->map(function($item, $key) {         
-            return  $item->permissions = $item->with('permissions')->get()->pluck('permissions')->flatten()->pluck('name')->toArray();
-         });
+        $objeto->roles->map(function($item) {       
+            $item->permissoes = $item->permissions->flatten()->pluck('name')->toArray();
+            unset($item->permissions);
+            return $item->permissoes;
+        });
         $objeto->permissions = (new Permission())->all();
 
         return $objeto;
@@ -43,17 +43,6 @@ class RolesBO
 
         return $objeto->role;
     }
-    private function syncPermissions($role, $request)
-    {         
-        $role->permissions()->detach();          
-        foreach ($request->permissions as $permission)
-        {         
-            $role->givePermissionTo($permission);
-        }
-        $role->permissions;
-            
-        return $this;
-    }
     public function update($request, $role): bool
     {
         try {
@@ -63,12 +52,28 @@ class RolesBO
                 'guard_name' => 'api'
             ];
             $objeto->role = $role->update($array);
+
             $this->syncPermissions($role, $request);
             return true;
 
         } catch (\Throwable $th) {
             return false;
         }
+    }
+    private function syncPermissions($role, $request)
+    {   
+        try {
+            $role->permissions()->detach();   
+            $permissoes = array_unique($request->permissions);
+            foreach ($permissoes as $permission)
+            {         
+                $role->givePermissionTo($permission);
+            }
+            $role->permissions;  
+            return $this;
+        } catch (\Throwable $th) {
+            return $this;   
+        }    
     }
     public function destroy($role): bool
     {
