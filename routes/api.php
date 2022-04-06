@@ -33,9 +33,11 @@ Route::middleware('auth:api')->prefix('v1')->name('v1.')->group(function () {
 
     });
     Route::resource('usuario', 'Api\UsuarioController');
+
+    Route::group(['prefix' => 'menu'], function () {
+        Route::get('/initialize', 'Api\MenuController@initialize');
+    });
     Route::resource('menu', 'Api\MenuController');
-
-
 
     Route::group(['prefix' => 'acl'], function () {
         Route::resource('role', 'Api\Acl\RolesController');

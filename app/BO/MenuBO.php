@@ -23,12 +23,18 @@ class MenuBO
     public function index()
     {
         $objeto = new \stdClass();
-        $objeto->menus = (new Menu())->listaMenus(); 
-        $objeto->permissions = (new Permission())->all()->pluck('name', 'id');
-
+        $objeto->menus = (new Menu())->listaMenus();   
         $this->menu = $this->normalizarMenu($objeto->menus);
         unset($objeto->menus);        
         $objeto->menus = $this->menu;   
+
+        return $objeto;
+    }
+    public function initialize()
+    {
+        $objeto = new \stdClass();
+        $objeto->menus = (new Menu())->all(); 
+        $objeto->permissions = (new Permission())->all();
 
         return $objeto;
     }
@@ -58,17 +64,20 @@ class MenuBO
      * @param  \App\Model\Menu  $menu
      * @return \Illuminate\Http\Response
      */
-    public function update($request, Menu $menu)
+    public function update($request, $menu)
     {
         $objeto = new \stdClass();
-        $objeto->menu = $menu->update([
+        $objeto->menu = (new Menu)->find($menu);
+        
+        $objeto->menu->update([
             "id_permission"     => $request->id_permission,
             "menu_id"           => $request->menu_id,
             "title"             => $request->title,
             "icon"              => $request->icon,
-            "to"                => $request->to	
+            "to"                => $request->to,
+            "ordem"             => $request->ordem	
         ]);       
-        return $menu;
+        return $objeto;
     }
 
     /**
@@ -77,9 +86,11 @@ class MenuBO
      * @param  \App\Model\Menu  $menu
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Menu $menu)
+    public function destroy($menu)
     {
-        return $menu->delete();
+        $objeto = new \stdClass();
+        $objeto->menu = (new Menu)->find($menu);
+        return $objeto->menu->delete();
     }
 
     private function normalizarMenu($listaMenu)
@@ -117,7 +128,10 @@ class MenuBO
                 "ordem" => $menu->ordem,                
                 "id_permission" => $menu->id_permission,
                 "resource" => ucfirst($permission[0]),
-                "action"  =>$permission[1]       
+                "action"  =>$permission[1],
+                "permissao" => $menu->permission ,
+                "created_at" => $menu->created_at, 
+                "updated_at" => $menu->updated_at       
             ];
         }
         return [];

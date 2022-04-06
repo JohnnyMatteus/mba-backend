@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Model\Uuid;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
@@ -43,6 +44,8 @@ class Menu extends Model
                          m.icon,
                          m2.menu_id AS hasChild,
                          p.name AS permission,
+                         m.created_at,	
+                         m.updated_at,
                          GROUP_CONCAT(DISTINCT m2.id ORDER BY m2.ordem ) AS listaFilhos
                     FROM menus m
                LEFT JOIN menus m2
@@ -51,6 +54,6 @@ class Menu extends Model
                       ON m.id_permission = p.id    
                GROUP by m.id
                ORDER BY m.menu_id DESC, listaFilhos";
-        return \DB::select($query);
+        return DB::select($query);
     }
 }

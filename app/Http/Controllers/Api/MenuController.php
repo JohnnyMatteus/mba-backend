@@ -41,6 +41,32 @@ class MenuController extends Controller
         return \Helpers::collection($this->return, $this->code, $this->message);
     }
 
+    public function initialize()
+    {
+        /*if (Gate::denies('menu.initialize'))
+        {
+            return redirect()->back()->with("error", "Você não tem permissão de acesso.");
+        }*/
+        $menusBO = new MenuBO();
+        $this->return = $menusBO->initialize();
+
+        if (!$this->return) {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao buscar";
+        }
+
+        return \Helpers::collection($this->return, $this->code, $this->message);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -65,6 +91,27 @@ class MenuController extends Controller
         return \Helpers::collection($this->return, $this->code, $this->message);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Model\Menu  $menu
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Menu $menu)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Model\Menu  $menus
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Menu $menu)
+    {
+        //
+    }
 
     /**
      * Update the specified resource in storage.
@@ -73,7 +120,7 @@ class MenuController extends Controller
      * @param  \App\Model\Menu  $menu
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, menu $menu)
+    public function update(Request $request, $menu)
     {
         /*if (Gate::denies('menu.update'))
         {
@@ -96,7 +143,7 @@ class MenuController extends Controller
      * @param  \App\Model\Menu  $menu
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Menu $menu)
+    public function destroy($menu)
     {
         /*if (Gate::denies('menu.destroy'))
         {
