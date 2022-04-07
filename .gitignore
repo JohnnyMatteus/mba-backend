@@ -1,5 +1,5 @@
 
-vendor
+/vendor
 Homestead.json
 Homestead.yaml
 npm-debug.log
@@ -14,7 +14,7 @@ package-lock
 /storage
 
 .DS_Store
-node_modules
+/node_modules
 /dist
 
 
