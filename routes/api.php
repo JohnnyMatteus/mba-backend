@@ -37,7 +37,7 @@ Route::middleware('auth:api')->prefix('v1')->name('v1.')->group(function () {
         Route::get('/initialize', 'Api\MenuController@initialize')->name('v1.initialize');
     });   
     Route::group(['prefix' => 'empresas'], function () {
-        Route::get('/initialize', 'Api\EmpresaController@initialize');
+        Route::get('/initialize', 'Api\EmpresasController@initialize');
     }); 
     Route::resource('empresas', 'Api\EmpresasController');
 
