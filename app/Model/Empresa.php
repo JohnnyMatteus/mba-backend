@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Tenant\TenantModels;
 use App\Model\Uuid;
-use Illuminate\Database\Eloquent\Model;
 
 class Empresa extends Model
 {

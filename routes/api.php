@@ -31,19 +31,24 @@ Route::middleware('auth:api')->prefix('v1')->name('v1.')->group(function () {
         Route::get('/dados-usuario', 'Api\UsuarioController@index');
         Route::get('/logout', 'Api\UsuarioController@logout');
 
-    });
-    Route::resource('usuario', 'Api\UsuarioController');
+    });   
 
     Route::group(['prefix' => 'menu'], function () {
-        Route::get('/initialize', 'Api\MenuController@initialize');
-    });
-    Route::resource('menu', 'Api\MenuController');
+        Route::get('/initialize', 'Api\MenuController@initialize')->name('v1.initialize');
+    });   
+    Route::group(['prefix' => 'empresas'], function () {
+        Route::get('/initialize', 'Api\EmpresaController@initialize');
+    }); 
+    Route::resource('empresas', 'Api\EmpresasController');
 
     Route::group(['prefix' => 'acl'], function () {
         Route::resource('role', 'Api\Acl\RolesController');
-        Route::resource('permission', 'Api\Acl\PermissionsController');
-    
+        Route::resource('permission', 'Api\Acl\PermissionsController');    
     });
 
+    Route::resources([
+        'usuario' => 'Api\UsuarioController',
+        'menu' => 'Api\MenuController'
+    ]);
     
 });
