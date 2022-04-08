@@ -4,12 +4,13 @@ npm-debug.log
 yarn-error.log
 .DS_Store
 .vscode
-.env
+
 
 .DS_Store
 /vendor
 /node_modules
 /dist
+.env
 
 /storage
 
