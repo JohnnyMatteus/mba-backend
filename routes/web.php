@@ -12,16 +12,14 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Auth::routes([
     'register' => false, // Register Routes...
     'reset' => false, // Reset Password Routes...
     'verify' => false, // Email Verification Routes...
 ]);
-Auth::routes();
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
