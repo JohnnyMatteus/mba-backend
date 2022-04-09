@@ -41,6 +41,11 @@ Route::middleware('auth:api')->prefix('v1')->name('v1.')->group(function () {
     }); 
     Route::resource('empresas', 'Api\EmpresasController');
 
+    Route::group(['prefix' => 'empreendimento'], function () {
+        Route::get('/initialize', 'Api\EmpreendimentosController@initialize');
+    }); 
+    Route::resource('empreendimento', 'Api\EmpreendimentosController');
+
     Route::group(['prefix' => 'acl'], function () {
         Route::resource('role', 'Api\Acl\RolesController');
         Route::resource('permission', 'Api\Acl\PermissionsController');    
