@@ -2,10 +2,14 @@
 
 namespace App\BO;
 
+use App\Model\Role;
 use App\Model\User;
 use App\Http\Requests;
+use App\Model\Empresa;
 use App\Model\Permissions;
+use App\Model\ModelHasRole;
 use Illuminate\Http\Request;
+use App\Model\Empreendimento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -25,12 +29,51 @@ class UsuarioBO
     {
         try {
             $objeto = new \stdClass();
-            $objeto->usuario = (new User())->create($request);
+            if ($request->hasFile('avatar'))
+            {
+                $nameFile = preg_replace('/\s+/', '', $request->name.'.'.$request->avatar->extension());
+                $request->avatar->storeAs('usuarios/avatar', $nameFile);
+                $request->merge([
+                    "avatar_url" => $nameFile
+                ]);
+            }
+            $request->merge([ "status" => 'A', "password" => bcrypt("devomudar") ]);
+            
+            $objeto->usuario = (new User())->create($request->all());
+            
+            ModelHasRole::create([
+                "model_id" =>  $objeto->usuario->id,
+                "role_id" => $request->role,
+                "model_type" => 'App\Model\User'                
+            ]);
+            if ($request->has('empreendimentos') && is_array($request->empreendimentos))
+            {
+                foreach ($request->empreendimentos as $item)
+                {
+                    $objeto->usuario->empreendimentos()->sync($item);
+                }                
+            }
             return $objeto->usuario;
+
         } catch (\Throwable $th) {
-            return false;
+            return $th->getMessage(). " - " .$th->getLine();
         }
 
+    }
+    public function initialize()
+    {
+        $objeto = new \stdClass();
+        $objeto->usuarios = (new User())->all();
+        $objeto->empresas = (new Empresa())->all();
+        $objeto->empreendimentos = (new Empreendimento())->all();
+        $objeto->roles = (new Role())->all();
+        $objeto->usuarios->map(function($item)
+        {
+            $item->role = (isset($item->roles) && count($item->roles) > 0) ? $item->roles[0]->name : false;
+            unset($item->roles);
+            return $item->roles;
+        });
+        return $objeto;
     }
     public function show($user)
     {
@@ -41,7 +84,37 @@ class UsuarioBO
     public function update($request, $user)
     {
         $objeto = new \stdClass();
-        $objeto->usuario = $user->update($request);
+        try {
+            $objeto = new \stdClass();
+            if ($request->hasFile('avatar'))
+            {
+                $nameFile = preg_replace('/\s+/', '', $request->name.'.'.$request->avatar->extension());
+                $request->avatar->storeAs('usuarios/avatar', $nameFile);
+                $request->merge([
+                    "avatar_url" => $nameFile
+                ]);
+            }            
+            $objeto->usuario = $user->update($request->all());
+            $objeto->usuario->roles->detach(); 
+            ModelHasRole::create([
+                "model_id" =>  $objeto->usuario->id,
+                "role_id" => $request->role,
+                "model_type" => 'App\Model\User'                
+            ]);
+            if ($request->has('empreendimentos') && is_array($request->empreendimentos))
+            {
+                $objeto->usuario->empreendimentos()->detach(); 
+                foreach ($request->empreendimentos as $item)
+                {
+                    $objeto->usuario->empreendimentos()->sync($item);
+                }                
+            }
+            return $objeto->usuario;
+
+        } catch (\Throwable $th) {
+            return $th->getMessage(). " - " .$th->getLine();
+        }
+
         return $objeto->usuario;
     }
     public function destroy($user)

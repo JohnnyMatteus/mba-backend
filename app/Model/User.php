@@ -125,6 +125,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialAccount::class, 'id_usuario');
     }
-
+    public function empreendimentos()
+    {
+        return $this->belongsToMany(Empreendimento::class, 'users_has_empreendimentos', 'id_user', 'id_empreendimento',);
+    }
 
 }

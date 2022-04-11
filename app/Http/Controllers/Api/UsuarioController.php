@@ -25,6 +25,27 @@ class UsuarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function initialize()
+    {
+        /*if (Gate::denies('empreendimento.index'))
+        {
+            return redirect()->back()->with("error", "Você não tem permissão de acesso.");
+        }*/
+        $usuarioBO = new UsuarioBO();
+        $this->return = $usuarioBO->initialize();
+
+        if (!$this->return) {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao buscar";
+        }
+
+        return \Helpers::collection($this->return, $this->code, $this->message);
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $usuarioBO = new UsuarioBO();

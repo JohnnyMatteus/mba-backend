@@ -28,9 +28,9 @@ Route::get('/authorize/{provider}/callback', 'Api\SocialAuthController@handlePro
 Route::middleware('auth:api')->prefix('v1')->name('v1.')->group(function () {
 
     Route::group(['prefix' => 'usuario'], function () {
+        Route::get('/initialize', 'Api\UsuarioController@initialize');
         Route::get('/dados-usuario', 'Api\UsuarioController@index');
         Route::get('/logout', 'Api\UsuarioController@logout');
-
     });   
 
     Route::group(['prefix' => 'menu'], function () {
