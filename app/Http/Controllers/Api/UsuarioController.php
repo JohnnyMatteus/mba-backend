@@ -104,7 +104,7 @@ class UsuarioController extends Controller
      * @param  \App\Model\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $user)
     {
         $usuarioBO = new UsuarioBO();
         $this->return = $usuarioBO->update($request, $user);

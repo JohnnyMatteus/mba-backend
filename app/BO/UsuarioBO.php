@@ -81,11 +81,13 @@ class UsuarioBO
         $objeto->usuario = $user;
         return $objeto->usuario;
     }
-    public function update($request, $user)
+    public function update($request, $id)
     {
         $objeto = new \stdClass();
         try {
-            $objeto = new \stdClass();
+            $objeto = new \stdClass();            
+            $user = (new User())->find($id);
+        
             if ($request->hasFile('avatar'))
             {
                 $nameFile = preg_replace('/\s+/', '', $request->name.'.'.$request->avatar->extension());
@@ -93,14 +95,18 @@ class UsuarioBO
                 $request->merge([
                     "avatar_url" => $nameFile
                 ]);
-            }            
-            $objeto->usuario = $user->update($request->all());
-            $objeto->usuario->roles->detach(); 
-            ModelHasRole::create([
-                "model_id" =>  $objeto->usuario->id,
-                "role_id" => $request->role,
-                "model_type" => 'App\Model\User'                
-            ]);
+            }      
+            $objeto->usuario = $user->update($request->all());              
+            if ($request->has('role'))
+            {
+                $objeto->usuario->roles->detach(); 
+                ModelHasRole::create([
+                    "model_id" =>  $objeto->usuario->id,
+                    "role_id" => $request->role,
+                    "model_type" => 'App\Model\User'                
+                ]);
+            }
+
             if ($request->has('empreendimentos') && is_array($request->empreendimentos))
             {
                 $objeto->usuario->empreendimentos()->detach(); 
@@ -109,7 +115,7 @@ class UsuarioBO
                     $objeto->usuario->empreendimentos()->sync($item);
                 }                
             }
-            return $objeto->usuario;
+            return json_encode($request->all());
 
         } catch (\Throwable $th) {
             return $th->getMessage(). " - " .$th->getLine();
@@ -175,6 +181,7 @@ class UsuarioBO
     }
     private function verificaDadosUsuario()
     {
+        $this->dadosUsuario['user']['id'] = $this->usuario->id;
         $this->dadosUsuario['user']['name'] = $this->usuario->name;
         $this->dadosUsuario['user']['email'] = $this->usuario->email;
         $this->dadosUsuario['user']['id_empresa'] = $this->usuario->id_empresa;
