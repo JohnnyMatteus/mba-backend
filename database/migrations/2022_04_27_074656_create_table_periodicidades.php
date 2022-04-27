@@ -15,8 +15,9 @@ class CreateTablePeriodicidades extends Migration
     {
         Schema::create('periodicidades', function (Blueprint $table) {
             $table->id();
+            $table->string("uuid");
             $table->string("nome");
-            $table->string("perido");
+            $table->string("periodo");
             $table->string("tipo");
             $table->string("dias");
             $table->string("descricao");
