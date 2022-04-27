@@ -42,7 +42,7 @@ class FornecedorBO
     public function store(Request $request)
     {
         $objeto = new \stdClass();
-     
+        
         $objeto->fornecedor = (new Fornecedor())->firstOrCreate([
             'nome'                 => $request->nome,
             'email'                => $request->email,
@@ -60,7 +60,7 @@ class FornecedorBO
             'nome'                 => $request->nome,
             'email'                => $request->email,
             'responsavel'          => $request->responsavel, 
-            'status'               => "A"
+            'status'               => $request->status
         ]);    
         return $objeto->fornecedor;       
     }
