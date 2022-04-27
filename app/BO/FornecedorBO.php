@@ -23,14 +23,14 @@ class FornecedorBO
     {
         $objeto = new \stdClass();
         $objeto->fornecedor = (new Fornecedor())->all();  
-        $objeto->empresas   = (new Empresa())->all()->pluck("nome", "id");
+        $objeto->empresas   = (new Empresa())->all();
         return $objeto;
     }
     public function initialize()
     {
         $objeto = new \stdClass();
         $objeto->fornecedor = (new Fornecedor())->all(); 
-        $objeto->empresas   = (new Empresa())->all()->pluck("nome", "id");
+        $objeto->empresas   = (new Empresa())->all();
         return $objeto;
     }
 
