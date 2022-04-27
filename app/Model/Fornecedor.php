@@ -15,6 +15,7 @@ class Fornecedor extends Model
     protected $fillable = [
         'id', 
         'uuid',
+        'id_empresa',
         'nome',
         'email',
         'responsavel',

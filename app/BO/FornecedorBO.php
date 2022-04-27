@@ -2,6 +2,7 @@
 
 namespace App\BO;
 
+use App\Model\Empresa;
 use App\Model\Fornecedor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +12,7 @@ class FornecedorBO
 
     private $prosseguir;
     private $data;
-    private $empresa;
+    private $fornecedor;
 
     /**
      * Display a listing of the resource.
@@ -21,15 +22,15 @@ class FornecedorBO
     public function index()
     {
         $objeto = new \stdClass();
-        $objeto->fornecedor = (new Fornecedor())->all();   
-
+        $objeto->fornecedor = (new Fornecedor())->all();  
+        $objeto->empresas   = (new Empresa())->all()->pluck("nome", "id");
         return $objeto;
     }
     public function initialize()
     {
         $objeto = new \stdClass();
         $objeto->fornecedor = (new Fornecedor())->all(); 
-
+        $objeto->empresas   = (new Empresa())->all()->pluck("nome", "id");
         return $objeto;
     }
 
@@ -46,7 +47,8 @@ class FornecedorBO
         $objeto->fornecedor = (new Fornecedor())->firstOrCreate([
             'nome'                 => $request->nome,
             'email'                => $request->email,
-            'responsavel'          => $request->responsavel, 
+            'responsavel'          => $request->responsavel,
+            'id_empresa'           => $request->id_empresa, 
             'status'               => "A"
         ]);
         return $objeto->fornecedor;
@@ -60,6 +62,7 @@ class FornecedorBO
             'nome'                 => $request->nome,
             'email'                => $request->email,
             'responsavel'          => $request->responsavel, 
+            'id_empresa'           => $request->id_empresa,
             'status'               => $request->status
         ]);    
         return $objeto->fornecedor;       
