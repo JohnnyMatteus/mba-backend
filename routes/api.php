@@ -53,6 +53,13 @@ Route::middleware('auth:api')->prefix('v1')->name('v1.')->group(function () {
 
     Route::resource('componente', 'Api\ComponentesController');
     Route::resource('sistema', 'Api\SistemasController');
+    Route::resource('notificacao', 'Api\NotificacaoController');
+    Route::resource('plano-manutencao', 'Api\PlanoManutencaoController');
+    Route::resource('item-plano-manutencao', 'Api\ItemPlanoManutencaoController');
+    Route::resource('atividade', 'Api\AtividadeController');
+    Route::resource('historico-atividade', 'Api\HistoricoAtividadeController');
+    Route::resource('arquivo-atividade', 'Api\ArquivoAtividadeController');
+
 
     Route::group(['prefix' => 'acl'], function () {
         Route::resource('role', 'Api\Acl\RolesController');
