@@ -5,6 +5,7 @@ namespace App\BO;
 use App\Model\Empresa;
 use App\Model\Fornecedor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class FornecedorBO
@@ -23,14 +24,16 @@ class FornecedorBO
     {
         $objeto = new \stdClass();
         $objeto->fornecedor = (new Fornecedor())->all();  
-        $objeto->empresas   = (new Empresa())->all();
+        $objeto->empresas = $objeto->empresas = (Auth::user()->roles[0]['name'] == "Administrador") ? (new Empresa())->all() : ["id" => Auth::user()->id_empresa];; 
+
         return $objeto;
     }
     public function initialize()
     {
         $objeto = new \stdClass();
         $objeto->fornecedor = (new Fornecedor())->all(); 
-        $objeto->empresas   = (new Empresa())->all();
+        $objeto->empresas = $objeto->empresas = (Auth::user()->roles[0]['name'] == "Administrador") ? (new Empresa())->all() : ["id" => Auth::user()->id_empresa];; 
+
         return $objeto;
     }
 

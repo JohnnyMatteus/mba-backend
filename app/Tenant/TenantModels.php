@@ -16,7 +16,8 @@ trait TenantModels
         static::addGlobalScope(new TenantScope());
 
         static::creating(function (Model $obj) use ($empresa) {
-            if($empresa){
+            if($empresa) 
+            {
                 $obj->id_empresa = $empresa->id;
             }
         });

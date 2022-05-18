@@ -10,6 +10,8 @@ use App\Model\Permissions;
 use App\Model\ModelHasRole;
 use Illuminate\Http\Request;
 use App\Model\Empreendimento;
+use App\Model\Permission;
+use App\Model\RoleHasPermission;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -63,15 +65,15 @@ class UsuarioBO
     public function initialize()
     {
         $objeto = new \stdClass();
-        $objeto->usuarios = (new User())->all();
-        $objeto->empresas = (new Empresa())->all();
+        $objeto->usuarios = (new User())->all();       
+        $objeto->empresas = (Auth::user()->roles[0]['name'] == "Administrador") ? (new Empresa())->all() : ["id" => Auth::user()->id_empresa];
         $objeto->empreendimentos = (new Empreendimento())->all();
         $objeto->roles = (new Role())->all();
         $objeto->usuarios->map(function($item)
         {
             $item->role = (isset($item->roles) && count($item->roles) > 0) ? $item->roles[0]->name : false;
             unset($item->roles);
-            return $item->roles;
+            return $item->role;
         });
         return $objeto;
     }
@@ -136,42 +138,34 @@ class UsuarioBO
     }
     private function retornaArrayPemissions()
     {
-        if ($this->dadosUsuario['user']['role'] == 'Administrador')
+        $arrayPermissoes = [];
+        $permissoes = RoleHasPermission::select("permission_id")->where("role_id", $this->usuario->roles[0]->id)->get();
+        
+        foreach ($permissoes->toArray() as $item)
         {
-            return array([
-                "action" => 'manage',
-                "subject" => 'all'
-            ]);
+            $permissao = Permission::find($item['permission_id']);
+            array_push($arrayPermissoes, $permissao->name);            
         }
-        else if ($this->dadosUsuario['user']['role'] == 'Construtora')
-        {
-            return array([
-                "action" => 'read',
-                "subject" => 'dashboad-empresa'
-            ], [
-                "action" => 'read',
-                "subject" => 'Public'
-            ]);
-        }
-        else {
-            return $this->normalizarListaPermissoes();
-        }
+        return $this->normalizarListaPermissoes($arrayPermissoes);
     }
-    private function normalizarListaPermissoes()
+    private function normalizarListaPermissoes($arrayPermissoes)
     {
-        $data = array();
-        if (count($this->usuario->roles[0]->permissions) > 0)
-        {
-            $permissoes = $this->usuario->role[0]->permissions;            
-            foreach ($permissoes as $permissao)
-            {
-                $item = explode($permissao, '.');
-                array_push($data,  [
-                    "action" => $item[1],
-                    "subject" => ucfirst($item[0]) 
-                ]);
-            }            
-        }
+        $data = array();        
+                   
+        foreach ($arrayPermissoes as $permissao)
+        {         
+            $item = explode('.', $permissao);
+    
+            array_push($data,  [
+                "action" => $item[1],
+                "subject" => ucfirst($item[0]) 
+            ]);
+        } 
+        array_push($data, [
+            "action" => 'read',
+            "subject" => 'Public'
+        ]);           
+        
         return $data;
     }
     private function retornaRole()

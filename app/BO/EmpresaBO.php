@@ -4,6 +4,7 @@ namespace App\BO;
 
 use App\Model\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class EmpresaBO
@@ -28,10 +29,16 @@ class EmpresaBO
     public function initialize()
     {
         $objeto = new \stdClass();
-        $objeto->empresas = (new Empresa())->all(); 
-        $objeto->empresas->map(function($item) {
-            $item->logo = asset("empresas/{$item->logo}");
-        });
+        $objeto->empresas = $objeto->empresas = (Auth::user()->roles[0]['name'] == "Administrador") ? (new Empresa())->all() : ["id" => Auth::user()->id_empresa];; 
+        
+        if (count($objeto->empresas) > 2)
+        {
+            $objeto->empresas->map(function($item)
+            {
+                (isset($item->logo)) ?? $item->logo = asset("empresas/{$item->logo}");
+            });
+        }
+
 
         return $objeto;
     }
@@ -100,6 +107,12 @@ class EmpresaBO
     public function create() {}
     public function edit(Empresa $empresa) {}
     public function show(Empresa $empresa) {}
+    public function findById($id)
+    {
+        $objeto = new \stdClass();
+        $objeto->empresa = (new Empresa)->find($id);
+        return $objeto->empresa;
+    }
 
     
 

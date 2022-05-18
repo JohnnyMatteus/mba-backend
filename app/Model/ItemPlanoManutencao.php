@@ -17,19 +17,19 @@ class ItemPlanoManutencao extends Model
     {
         return $this->belongsTo(PlanoManutencao::class,'id_plano');
     }
-    public function sistema()
+    public function sistemas()
     {
         return $this->belongsTo(Sistemas::class,'id_sistema');
     }
-    public function periodicidade()
+    public function periodicidades()
     {
         return $this->belongsTo(Periodicidade::class,'id_periodicidade');
     }
-    public function componente()
+    public function componentes()
     {
         return $this->belongsTo(Componentes::class,'id_componente');
     }
-    public function fornecedor()
+    public function fornecedores()
     {
         return $this->belongsTo(Fornecedor::class,'id_fornecedor');
     }

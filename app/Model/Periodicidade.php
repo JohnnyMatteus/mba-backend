@@ -15,6 +15,7 @@ class Periodicidade extends Model
     protected $fillable = [
         'id', 
         'uuid',
+        'nome',
         'periodo',
         'tipo',
         'dias',

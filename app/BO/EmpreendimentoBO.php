@@ -5,6 +5,7 @@ namespace App\BO;
 use App\Model\Empresa;
 use Illuminate\Http\Request;
 use App\Model\Empreendimento;
+use Illuminate\Support\Facades\Auth;
 
 class EmpreendimentoBO
 {
@@ -32,7 +33,7 @@ class EmpreendimentoBO
         $objeto->empreendimentos->map(function($item) {
             $item->logo = asset("empreendimentos/{$item->logo}");
         });
-        $objeto->empresas = (new Empresa())->all(); 
+        $objeto->empresas = (Auth::user()->roles[0]['name'] == "Administrador") ? (new Empresa())->all() : ["id" => Auth::user()->id_empresa];
       
 
         return $objeto;
