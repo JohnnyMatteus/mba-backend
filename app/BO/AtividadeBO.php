@@ -23,6 +23,12 @@ class AtividadeBO
     {
         $objeto = new \stdClass();
         $objeto->atividades = (new Atividade())->all();  
+        $objeto->atividades->map(function($item)
+        {
+            $item->fornecedor_nome = $item->fornecedor->nome;
+            $item->comprovante_fiscal = asset("/storage/atividades/arquivo/{$item->comprovante_fiscal}");
+            unset($item->fornecedor);
+        });
         return $objeto;
     }
 
@@ -35,21 +41,27 @@ class AtividadeBO
     public function store(Request $request)
     {
         $objeto = new \stdClass();
-        
+        if ($request->hasFile('arquivo'))
+        {
+            $nameFile = preg_replace('/\s+/', '', time().'.'.$request->arquivo->extension());
+            $request->arquivo->storeAs('public/atividades/arquivo', $nameFile);
+            $request->merge([
+                "comprovante_fiscal" => $nameFile
+            ]);
+        } 
         $objeto->atividade = (new Atividade())->firstOrCreate([
-            'observacao'                 => $request->nome,
-            'data_atividade'            => $request->data_atividade,
-            'data_registro,'           => $request->data_registro,
-            'data_execucao,'           => $request->data_execucao,        
-            'status,'           => $request->status,        
-            'comprovante_fiscal,'           => $request->comprovante_fiscal,        
-            'custo_estivmado,'           => $request->custo_estivmado,        
-            'custo_real,'           => $request->custo_real,        
-            'custo_real,'           => $request->custo_real,        
-            'id_item_plano_manutencao,'           => $request->id_item_plano_manutencao,        
-            'id_fornecedor,'           => $request->id_fornecedor       
+            'observacao'                       => $request->observacao,
+            'data_atividade'                   => $request->data_atividade,
+            'data_registro'                    => $request->data_registro,             
+            'status'                           => $request->status,        
+            'comprovante_fiscal'               => ($request->hasFile('arquivo')) ? $request->comprovante_fiscal : $request->comprovante_fiscal,       
+            'id_item_plano_manutencao'         => $request->id_item_plano_manutencao,        
+            'id_fornecedor'                    => $request->id_fornecedor       
 
         ]);
+        $objeto->atividade->fornecedor_nome = $objeto->atividade->fornecedor->nome;
+        $objeto->atividade->comprovante_fiscal = asset("/storage/atividades/arquivo/{$objeto->atividade->comprovante_fiscal}");
+        unset($objeto->atividade->fornecedor);
         return $objeto->atividade;
 
     }
@@ -58,18 +70,22 @@ class AtividadeBO
     {
         $objeto = new \stdClass();
         $objeto->atividade = (new Atividade())->find($id);
+        if ($request->hasFile('arquivo'))
+        {
+            $nameFile = preg_replace('/\s+/', '', time().'.'.$request->arquivo->extension());
+            $request->arquivo->storeAs('public/atividades/arquivo', $nameFile);
+            $request->merge([
+                "comprovante_fiscal" => $nameFile
+            ]);
+        } 
         $objeto->atividade->update([
-            'observacao'                 => $request->nome,
-            'data_atividade'            => $request->data_atividade,
-            'data_registro,'           => $request->data_registro,
-            'data_execucao,'           => $request->data_execucao,        
-            'status,'           => $request->status,        
-            'comprovante_fiscal,'           => $request->comprovante_fiscal,        
-            'custo_estivmado,'           => $request->custo_estivmado,        
-            'custo_real,'           => $request->custo_real,        
-            'custo_real,'           => $request->custo_real,        
-            'id_item_plano_manutencao,'           => $request->id_item_plano_manutencao,        
-            'id_fornecedor,'           => $request->id_fornecedor 
+            'observacao'                       => $request->observacao,
+            'data_atividade'                   => $request->data_atividade,
+            'data_registro'                    => $request->data_registro,             
+            'status'                           => $request->status,        
+            'comprovante_fiscal'               => ($request->hasFile('arquivo')) ? $request->comprovante_fiscal : $objeto->atividade->comprovante_fiscal,       
+            'id_item_plano_manutencao'         => $request->id_item_plano_manutencao,        
+            'id_fornecedor'                    => $request->id_fornecedor    
         ]);    
         return $objeto->atividade;       
     }
@@ -79,6 +95,7 @@ class AtividadeBO
     {
         $objeto = new \stdClass();
         $objeto->atividade = (new Atividade())->find($id);
+        Storage::delete("/public/atividades/arquivo/".$objeto->atividade->comprovante_fiscal);
         return $objeto->atividade->delete();
     }
 

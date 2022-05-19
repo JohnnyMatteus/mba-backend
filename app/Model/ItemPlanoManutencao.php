@@ -11,7 +11,7 @@ class ItemPlanoManutencao extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'id',	'uuid',	'nome',	'data_inicial',	'data_final',	'status',	'id_plano',	'id_periodicidade',	'id_sistema',	'id_componente',	'id_fornecedor',	'created_at',	'updated_at'
+        'id',	'uuid',	'nome',	'status',	'id_plano',	'id_periodicidade',	'id_sistema',	'id_componente',	'id_fornecedor',	'created_at',	'updated_at'
     ];
     public function plano()
     {

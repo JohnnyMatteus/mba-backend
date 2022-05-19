@@ -51,8 +51,6 @@ Route::group(['middleware' => ['auth:api', 'tenant'], 'prefix' => 'v1', 'name' =
     Route::resource('plano-manutencao', 'Api\PlanoManutencaoController');
     Route::resource('item-plano-manutencao', 'Api\ItemPlanoManutencaoController');
     Route::resource('atividade', 'Api\AtividadeController');
-    Route::resource('historico-atividade', 'Api\HistoricoAtividadeController');
-    Route::resource('arquivo-atividade', 'Api\ArquivoAtividadeController');
     Route::resource('periodicidades', 'Api\PeriodicidadesController');
 
     Route::group(['prefix' => 'acl'], function () {
@@ -63,6 +61,5 @@ Route::group(['middleware' => ['auth:api', 'tenant'], 'prefix' => 'v1', 'name' =
     Route::resources([
         'usuario' => 'Api\UsuarioController',
         'menu' => 'Api\MenuController'
-    ]);
-    
+    ]);    
 });

@@ -50,8 +50,6 @@ class ItensPlanoManutencaoBO
         
         $objeto->item = (new ItemPlanoManutencao())->firstOrCreate([
             'nome'                      => $request->nome,
-            'data_inicial'              => $request->data_inicial,
-            'data_final'                => $request->data_final,
             'status'                    => $request->status,
             'id_plano'                  => $request->id_plano,
             'id_periodicidade'          => $request->id_periodicidade,
@@ -68,15 +66,13 @@ class ItensPlanoManutencaoBO
         $objeto = new \stdClass();
         $objeto->item = (new ItemPlanoManutencao())->find($id);
         $objeto->item->update([
-            'nome'                 => $request->nome,
-            'data_inicial'            => $request->data_inicial,
-            'data_final'           => $request->data_final,
-            'status'           => $request->status,
-            'id_plano'           => $request->id_plano,
-            'id_periodicidade'           => $request->id_periodicidade,
-            'id_sistema'           => $request->id_sistema,
-            'id_componente'           => $request->id_componente,
-            'id_fornecedor'           => $request->id_fornecedor
+            'nome'                  => $request->nome,
+            'status'                => $request->status,
+            'id_plano'              => $request->id_plano,
+            'id_periodicidade'      => $request->id_periodicidade,
+            'id_sistema'            => $request->id_sistema,
+            'id_componente'         => $request->id_componente,
+            'id_fornecedor'         => $request->id_fornecedor
         ]);    
         return $objeto->item;       
     }

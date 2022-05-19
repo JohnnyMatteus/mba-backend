@@ -98,12 +98,14 @@ class UsuarioBO
                     "avatar_url" => $nameFile
                 ]);
             }      
-            $objeto->usuario = $user->update($request->all());              
+            $objeto->usuario = $user->update($request->all());  
+             
+            
             if ($request->has('role'))
-            {
-                $objeto->usuario->roles->detach(); 
+            {                
+                $user->roles()->detach();                
                 ModelHasRole::create([
-                    "model_id" =>  $objeto->usuario->id,
+                    "model_id" =>  $user->id,
                     "role_id" => $request->role,
                     "model_type" => 'App\Model\User'                
                 ]);
@@ -111,13 +113,13 @@ class UsuarioBO
 
             if ($request->has('empreendimentos') && is_array($request->empreendimentos))
             {
-                $objeto->usuario->empreendimentos()->detach(); 
+                $user->empreendimentos()->detach(); 
                 foreach ($request->empreendimentos as $item)
                 {
-                    $objeto->usuario->empreendimentos()->sync($item);
+                    $user->empreendimentos()->sync($item);
                 }                
             }
-            return json_encode($request->all());
+            return $request->all();
 
         } catch (\Throwable $th) {
             return $th->getMessage(). " - " .$th->getLine();

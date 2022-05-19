@@ -37,12 +37,12 @@ class PlanoManutencaoBO
         $objeto = new \stdClass();
         
         $objeto->plano = (new PlanoManutencao())->firstOrCreate([
-            'nome'                 => $request->nome,
-            'data_inicial'            => $request->data_inicial,
-            'data_final'           => $request->data_final,        
-            'status'           => $request->status,        
-            'id_empresa'           => $request->id_empresa,        
-            'id_empreendimento'           => $request->id_empreendimento        
+            'nome'                  => $request->nome,
+            'data_inicial'          => $request->data_inicial,
+            'data_final'            => $request->data_final,        
+            'status'                => $request->status,        
+            'id_empresa'            => $request->id_empresa,        
+            'id_empreendimento'     => $request->id_empreendimento        
         ]);
         return $objeto->plano;        
     }
