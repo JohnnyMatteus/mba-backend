@@ -23,6 +23,11 @@ class PlanoManutencaoBO
     {
         $objeto = new \stdClass();
         $objeto->planos = (new PlanoManutencao())->all();  
+        $objeto->planos->map(function($plano) {
+            $plano->empreendimento_name = $plano->empreendimento->name;
+            unset($plano->empreendimento);
+            return $plano->empreendimento_name;
+        });
         return $objeto;
     }
 
@@ -78,6 +83,17 @@ class PlanoManutencaoBO
     public function show(PlanoManutencao $plano)
     {
         return $plano;
+    }
+    public function estatiscasGerais()
+    {       
+        return PlanoManutencao::estatiscasGerais();
+    }
+
+    public function atividadesSemanal()
+    {
+        $objeto = new \stdClass();
+        $objeto->retorno = PlanoManutencao::atividadesSemanal();     
+        return $objeto->retorno;
     }
 
     

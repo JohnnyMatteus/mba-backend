@@ -6,11 +6,13 @@ use App\Model\Role;
 use App\Model\User;
 use App\Http\Requests;
 use App\Model\Empresa;
+use App\Model\Permission;
 use App\Model\Permissions;
 use App\Model\ModelHasRole;
+use App\Exports\UsersExport;
 use Illuminate\Http\Request;
+use Excel;
 use App\Model\Empreendimento;
-use App\Model\Permission;
 use App\Model\RoleHasPermission;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Collection;
@@ -86,10 +88,11 @@ class UsuarioBO
     public function update($request, $id)
     {
         $objeto = new \stdClass();
+
         try {
             $objeto = new \stdClass();            
             $user = (new User())->find($id);
-        
+            
             if ($request->hasFile('avatar'))
             {
                 $nameFile = preg_replace('/\s+/', '', $request->name.'.'.$request->avatar->extension());
@@ -97,10 +100,10 @@ class UsuarioBO
                 $request->merge([
                     "avatar_url" => $nameFile
                 ]);
-            }      
+            }  
+               
             $objeto->usuario = $user->update($request->all());  
-             
-            
+                         
             if ($request->has('role'))
             {                
                 $user->roles()->detach();                
@@ -119,13 +122,11 @@ class UsuarioBO
                     $user->empreendimentos()->sync($item);
                 }                
             }
-            return $request->all();
+            return $request->avatar_url;
 
         } catch (\Throwable $th) {
             return $th->getMessage(). " - " .$th->getLine();
         }
-
-        return $objeto->usuario;
     }
     public function destroy($user)
     {
@@ -201,5 +202,13 @@ class UsuarioBO
             ['email', '=', $email],
             ['status', '!=', 'I']
         ])->first();
+    }
+    public function exportCSV() 
+    {
+        return Excel::download(new UsersExport, 'lista_usuarios.xlsx');
+    }
+    public function exportPDF() 
+    {
+        return Excel::download(new UsersExport, 'lista_usuarios.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 }

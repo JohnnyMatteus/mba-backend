@@ -3,8 +3,9 @@
 namespace App\BO;
 
 use App\Model\Empresa;
-use App\Model\ItemPlanoManutencao;
 use Illuminate\Http\Request;
+use App\Exports\PlanosItensExport;
+use App\Model\ItemPlanoManutencao;
 use Illuminate\Support\Facades\Storage;
 
 class ItensPlanoManutencaoBO
@@ -95,6 +96,13 @@ class ItensPlanoManutencaoBO
         return $item;
     }
 
-    
+    public function exportCSV() 
+    {
+        return \Excel::download(new PlanosItensExport, 'lista_itens_plano.xlsx');
+    }
+    public function exportPDF() 
+    {
+        return \Excel::download(new PlanosItensExport, 'lista_itens_plano.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+    }
 
 }

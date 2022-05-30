@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Database\Eloquent\Collection;
+use Throwable;
 
 class SocialAuthBO
 {
@@ -26,65 +27,65 @@ class SocialAuthBO
     {
         $objeto = new stdClass;
         $objeto->url = Socialite::driver($provider)->stateless()->redirect()->getTargetUrl();
-        return $objeto->url;
+        return $objeto;
     }
 
     public function handleProviderCallback($provider)
-    {
-        $objeto = new stdClass;
-                
-        $dados = Socialite::driver($provider)->stateless()->user();
-        if (!$dados)
-        {
-            $objeto->menssagem = "Oops, aconteceu um erro por aqui, contate o administrador.";
-            $objeto->codigo = 2;
+    {        
+        try {
+            $objeto = new stdClass;
+            $dados = Socialite::driver($provider)->stateless()->user();
+            if (!$dados)
+            {
+                $objeto->menssagem = "Oops, aconteceu um erro por aqui, contate o administrador.";
+                $objeto->codigo = 2;
+                return $objeto;
+            }
+            $this->user = (new UsuarioBO)->retornaUsuarioPorEmail($dados->getEmail());
+
+            (!$this->user) ? $this->cadastrarUsuario($dados) : $this->cadastrarSocialAccount($provider, $dados);
+
+            if (!empty($this->user) && $this->user->status == 'A')
+            {
+                $objeto->access_token = $this->user->createToken('authToken')->accessToken;
+            } else if (!empty($this->user) && $this->user->status == 'P') {
+                $objeto->menssagem = "Seu cadastro foi efetivado, aguarde o contato do adiministrador para ativar sua senha.";
+                $objeto->codigo = 1;
+            } else {
+                $objeto->menssagem = "Oops, aconteceu um erro por aqui, contate o administrador.";
+                $objeto->codigo = 1;
+            }
             return $objeto;
+        } catch (Throwable $e) {
+            return $e->getMessage();
         }
-        $this->user = (new UsuarioBO)->retornaUsuarioPorEmail($dados->getEmail());
-    
-        (!$this->user) ? $this->cadastrarUsuario($dados) : $this->cadastrarSocialAccount($provider, $dados);
-        
-        if (!empty($this->user) && $this->user->status == 'A')
-        {
-            $objeto->access_token = $this->user->createToken('authToken')->accessToken;
-        }
-        else if(!empty($this->user) && $this->user->status == 'P') {
-            $objeto->menssagem = "Seu cadastro foi efetivado, aguarde o contato do adiministrador para ativar sua senha.";
-            $objeto->codigo = 1;
-        }
-        else {
-            $objeto->menssagem = "Oops, aconteceu um erro por aqui, contate o administrador.";
-            $objeto->codigo = 1;
-        }       
-        return $objeto;
     }
 
     private function cadastrarUsuario($objeto)
     {
         $array = ([
-            'name' => $objeto->getName() ?: $objeto->getNickname(), 
-            'email' => $objeto->getEmail(), 
-            'password' => bcrypt("devomudar"), 
-            'status' => 'P', 
+            'name' => $objeto->getName() ?: $objeto->getNickname(),
+            'email' => $objeto->getEmail(),
+            'password' => bcrypt("devomudar"),
+            'status' => 'P',
             'avatar_url' => $objeto->getAvatar(),
             'id_empresa' => 1,
             'email_verified_at' => now(),
             'remember_token' => Str::random(10)
         ]);
-        
+
         $this->user = (new UsuarioBO)->store($array);
         return $this;
     }
-    
+
     private function cadastrarSocialAccount($provider, $objeto)
     {
-        
+
         //Verifica se exite autenticação com o provider enviado
         $this->social = $this->user->socialAccount()->where('provider', $provider)->first();
 
         //Se não tiver entra neste fluxo, que realiza o cadastro do provider
-        if (!$this->social)
-        {               
+        if (!$this->social) {
             $array = ([
                 'provider' => $provider,
                 'provider_user_id' => $objeto->user['id'],
@@ -101,5 +102,4 @@ class SocialAuthBO
         $objeto->socialAccount = (new SocialAccount())->create($request);
         return $objeto->socialAccount;
     }
-
 }

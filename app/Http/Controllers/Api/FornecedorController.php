@@ -195,4 +195,30 @@ class FornecedorController extends Controller
 
         return \Helpers::collection($this->return, $this->code, $this->message);
     }
+    public function exportCSV()
+    {
+        $fornecedorBO = new FornecedorBO();
+        $this->return = $fornecedorBO->exportCSV();
+
+        if (!$this->return)
+        {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao baixar o arquivo";
+            return \Helpers::collection(false, $this->code, $this->message);
+        }
+        return $this->return;
+    }
+    public function exportPDF()
+    {
+        $fornecedorBO = new FornecedorBO();
+        $this->return = $fornecedorBO->exportPDF();
+
+        if (!$this->return)
+        {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao baixar o arquivo";
+            return \Helpers::collection(false, $this->code, $this->message);
+        }
+        return $this->return;
+    }
 }

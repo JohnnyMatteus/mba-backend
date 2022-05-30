@@ -5,6 +5,7 @@ namespace App\BO;
 use App\Model\Empresa;
 use App\Model\Fornecedor;
 use Illuminate\Http\Request;
+use App\Exports\FornecedoresExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -82,7 +83,14 @@ class FornecedorBO
     public function create() {}
     public function edit(Fornecedor $fornecedor) {}
     public function show(Fornecedor $fornecedor) {}
-
+    public function exportCSV() 
+    {
+        return \Excel::download(new FornecedoresExport, 'lista_empreendimentos.xlsx');
+    }
+    public function exportPDF() 
+    {
+        return \Excel::download(new FornecedoresExport, 'lista_empreendimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+    }  
     
 
 }

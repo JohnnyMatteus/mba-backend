@@ -6,6 +6,7 @@ use App\Model\Empresa;
 use Illuminate\Http\Request;
 use App\Model\Empreendimento;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\EmpreendimentosExport;
 
 class EmpreendimentoBO
 {
@@ -106,7 +107,13 @@ class EmpreendimentoBO
     public function create() {}
     public function edit(Empreendimento $empreendimento) {}
     public function show(Empreendimento $empreendimento) {}
-
-    
+    public function exportCSV() 
+    {
+        return \Excel::download(new EmpreendimentosExport, 'lista_empreendimentos.xlsx');
+    }
+    public function exportPDF() 
+    {
+        return \Excel::download(new EmpreendimentosExport, 'lista_empreendimentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+    }    
 
 }

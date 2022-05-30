@@ -4,6 +4,7 @@ namespace App\BO;
 
 use App\Model\Empresa;
 use Illuminate\Http\Request;
+use App\Exports\EmpresasExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -112,6 +113,15 @@ class EmpresaBO
         $objeto = new \stdClass();
         $objeto->empresa = (new Empresa)->find($id);
         return $objeto->empresa;
+    }
+
+    public function exportCSV() 
+    {
+        return \Excel::download(new EmpresasExport, 'lista_empresas.xlsx');
+    }
+    public function exportPDF() 
+    {
+        return \Excel::download(new EmpresasExport, 'lista_empresas.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
 
     

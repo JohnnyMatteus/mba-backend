@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\BO\SocialAuthBO;
 use App\Model\User;
+use App\BO\SocialAuthBO;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
@@ -31,7 +32,7 @@ class SocialAuthController extends Controller
             $this->code    = config('httpstatus.server_error.internal_server_error');
             $this->message = "Erro ao buscar";
         }
-
+        //return Socialite::driver('github')->stateless()->redirect();
         return \Helpers::collection($this->return, $this->code, $this->message);
     }
     public function handleProviderCallback($provider)
@@ -43,7 +44,8 @@ class SocialAuthController extends Controller
             $this->code    = config('httpstatus.server_error.internal_server_error');
             $this->message = "Erro ao buscar";
         }
-
+        // dd(Socialite::driver('github')->user());
+        // return Socialite::driver('github')->stateless()->user();
         return \Helpers::collection($this->return, $this->code, $this->message);
     }
 }

@@ -135,4 +135,31 @@ class UsuarioController extends Controller
 
         return \Helpers::collection($this->return, $this->code, $this->message);
     }
+
+    public function exportCSV()
+    {
+        $usuarioBO = new UsuarioBO();
+        $this->return = $usuarioBO->exportCSV();
+
+        if (!$this->return)
+        {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao baixar o arquivo";
+            return \Helpers::collection(false, $this->code, $this->message);
+        }
+        return $this->return;
+    }
+    public function exportPDF()
+    {
+        $usuarioBO = new UsuarioBO();
+        $this->return = $usuarioBO->exportPDF();
+
+        if (!$this->return)
+        {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao baixar o arquivo";
+            return \Helpers::collection(false, $this->code, $this->message);
+        }
+        return $this->return;
+    }
 }

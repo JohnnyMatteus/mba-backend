@@ -109,6 +109,27 @@ class AtividadeBO
         return $atividade;
     }
 
+    public function estatiscasGeraisMesAtual()
+    {       
+        return Atividade::estatiscasGeraisMesAtual();
+    }
+
+    public function estatiscasGerais()
+    {       
+        $objeto = new \stdClass();
+        $objeto->dados = Atividade::estatiscasGerais();
+        $total = 0;
+        if (isset($objeto->dados))
+        {
+            foreach ($objeto->dados as $item)
+            {
+                $total += $item->total;
+            }
+            array_push($objeto->dados, (object)['title' => "total", "total" => $total]);
+        }
+       
+        return $objeto->dados;
+    }
     
 
 }

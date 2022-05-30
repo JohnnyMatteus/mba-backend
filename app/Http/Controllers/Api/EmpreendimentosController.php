@@ -194,4 +194,30 @@ class EmpreendimentosController extends Controller
 
         return \Helpers::collection($this->return, $this->code, $this->message);
     }
+    public function exportCSV()
+    {
+        $empreendimentoBO = new EmpreendimentoBO();
+        $this->return = $empreendimentoBO->exportCSV();
+
+        if (!$this->return)
+        {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao baixar o arquivo";
+            return \Helpers::collection(false, $this->code, $this->message);
+        }
+        return $this->return;
+    }
+    public function exportPDF()
+    {
+        $empreendimentoBO = new EmpreendimentoBO();
+        $this->return = $empreendimentoBO->exportPDF();
+
+        if (!$this->return)
+        {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao baixar o arquivo";
+            return \Helpers::collection(false, $this->code, $this->message);
+        }
+        return $this->return;
+    }
 }

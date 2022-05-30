@@ -129,5 +129,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Empreendimento::class, 'users_has_empreendimentos', 'id_user', 'id_empreendimento',);
     }
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'id_empresa');
+    }
+    public static function exportCSV()
+    {
+        return User::select('id_empresa', 'name', 'email', 'status', 'created_at', 'updated_at')->get();
+    }
 
 }
