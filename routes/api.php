@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth:api', 'tenant'], 'prefix' => 'v1', 'name' =
     Route::group(['prefix' => 'item-plano-manutencao'], function () {        
         Route::get('/export/csv', 'Api\ItemPlanoManutencaoController@exportCSV');
         Route::get('/export/pdf', 'Api\ItemPlanoManutencaoController@exportPDF');
+        Route::get('/atividades/{id}', 'Api\ItemPlanoManutencaoController@buscaAtividadesPorIdPlano');
     });
     Route::resource('empreendimento', 'Api\EmpreendimentosController');
     Route::resource('fornecedor', 'Api\FornecedorController');

@@ -167,4 +167,20 @@ class ItemPlanoManutencaoController extends Controller
         }
         return $this->return;
     }
+    public function buscaAtividadesPorIdPlano($id)
+    {
+        /*if (Gate::denies('item-manutencao.index'))
+        {
+            return redirect()->back()->with("error", "Você não tem permissão de acesso.");
+        }*/
+        $itemPlanoManutencaoBO = new ItensPlanoManutencaoBO();
+        $this->return = $itemPlanoManutencaoBO->buscaAtividadesPorIdPlano($id);
+
+        if (!$this->return) {
+            $this->code    = config('httpstatus.server_error.internal_server_error');
+            $this->message = "Erro ao buscar";
+        }
+
+        return \Helpers::collection($this->return, $this->code, $this->message);
+    }
 }

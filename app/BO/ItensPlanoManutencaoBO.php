@@ -104,5 +104,28 @@ class ItensPlanoManutencaoBO
     {
         return \Excel::download(new PlanosItensExport, 'lista_itens_plano.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
     }
+        /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function buscaAtividadesPorIdPlano($plano_id)
+    {
+        $objeto = new \stdClass();
+        $objeto->itens = (new ItemPlanoManutencao())->where('id_plano', '=', $plano_id)->get(); 
+
+        $objeto->itens->map(function($item) {
+            $item->fornecedor       = $item->fornecedores->nome;
+            $item->equipamento      = $item->componentes->nome;
+            $item->sistema          = $item->sistemas->nome;
+            $item->periodicidade    = $item->periodicidades->nome;
+
+            unset($item->fornecedores);
+            unset($item->componentes);
+            unset($item->sistemas);
+            unset($item->periodicidades);
+        });
+        return $objeto;
+    }
 
 }

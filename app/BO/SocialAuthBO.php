@@ -49,13 +49,6 @@ class SocialAuthBO
             {
                 $objeto->access_token = $this->user->createToken('authToken')->accessToken;
             } 
-            /*else if (!empty($this->user) && $this->user->status == 'P') {
-                $objeto->menssagem = "Seu cadastro foi efetivado, aguarde o contato do adiministrador para ativar sua senha.";
-                $objeto->codigo = 1;
-            } else {
-                $objeto->menssagem = "Oops, aconteceu um erro por aqui, contate o administrador.";
-                $objeto->codigo = 1;
-            }*/
             return $objeto;
         } catch (Throwable $e) {
             return $e->getMessage();
