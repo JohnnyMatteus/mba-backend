@@ -200,7 +200,7 @@ class UsuarioBO
     {
         return User::where([
             ['email', '=', $email],
-            ['status', '!=', 'I']
+            ['status', '=', 'A']
         ])->first();
     }
     public function exportCSV() 
