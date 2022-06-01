@@ -44,7 +44,7 @@ class SocialAuthBO
             $this->user = (new UsuarioBO)->retornaUsuarioPorEmail($dados->getEmail());
 
             (!$this->user) ? $this->cadastrarUsuario($dados) : $this->cadastrarSocialAccount($provider, $dados);
-
+            dd($this->user);
             if (!empty($this->user) && $this->user->status == 'A')
             {
                 $objeto->access_token = $this->user->createToken('authToken')->accessToken;
