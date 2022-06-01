@@ -73,7 +73,8 @@ class SocialAuthBO
             'avatar_url' => $objeto->getAvatar(),
             'id_empresa' => 1,
             'email_verified_at' => now(),
-            'remember_token' => Str::random(10)
+            'remember_token' => Str::random(10),
+            'role' => 4
         ]);
 
         $this->user = (new UsuarioBO)->store($request);
