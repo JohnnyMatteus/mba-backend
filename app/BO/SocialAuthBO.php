@@ -64,7 +64,8 @@ class SocialAuthBO
 
     private function cadastrarUsuario($objeto)
     {
-        $array = ([
+        $request = new Request();
+        $request->merge([
             'name' => $objeto->getName() ?: $objeto->getNickname(),
             'email' => $objeto->getEmail(),
             'password' => bcrypt("devomudar"),
