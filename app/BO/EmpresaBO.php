@@ -67,12 +67,12 @@ class EmpresaBO
             'cell'                 => $request->cell, 
             'status'               => "A", 
             'logo'                 => (isset($request->logo_name)) ? $request->logo_name : $request->logo, 
-            'access_name'          => $request->access_name, 
+            'access_name'          => $request->slug, 
             'description'          => $request->description, 
             'email'                => $request->email, 
             'name_responsible'     => $request->name_responsible,        
             'site'                 => $request->site, 
-            'slug'                 => $request->slug
+            'slug'                 => $request->slug,
         ]);
         return $objeto->empresa;
     }
