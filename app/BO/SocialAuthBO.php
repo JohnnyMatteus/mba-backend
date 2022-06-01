@@ -76,7 +76,7 @@ class SocialAuthBO
             'remember_token' => Str::random(10)
         ]);
 
-        $this->user = (new UsuarioBO)->store($array);
+        $this->user = (new UsuarioBO)->store($request);
         return $this;
     }
 
